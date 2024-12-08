@@ -4,11 +4,9 @@ import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
-  const cart = useSelector(state => state.cart.items);
-  const dispatch = useDispatch();
-const handleIncrement = (item) => {
-  dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
-};
+const cart = useSelector(state => state.cart.items);
+const dispatch = useDispatch();
+
 
   // Calculate total amount for all products in the cart
  const calculateTotalAmount = () => {
@@ -18,8 +16,8 @@ const handleIncrement = (item) => {
 };
 
   const handleContinueShopping = (e) => {
-   
-  };
+    onContinueShopping(); // Call the function passed from the parent component
+};
 
 const handleDecrement = (item) => {
   if (item.quantity > 1) {
@@ -28,14 +26,18 @@ const handleDecrement = (item) => {
     dispatch(removeItem(item.name)); // Remove if quantity becomes 0
   }
 };
+const handleIncrement = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+  };
+  
 const handleRemove = (name) => {
   dispatch(removeItem(name)); // Dispatch removeItem
 };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    return (item.quantity * parseFloat(item.cost.replace('$', ''))).toFixed(2);
   };
-
   return (
     <div className="cart-container">
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
